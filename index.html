@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html><head>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+	
+	<title>Orders</title>
+	
+	    <script id='sap-ui-bootstrap' type='text/javascript' 
+        src='https://sapui5.hana.ondemand.com/resources/sap-ui-core.js'
+        data-sap-ui-libs="sap.m,sap.ui.commons,sap.ui.table" data-sap-ui-xx-bindingSyntax="complex",
+		data-sap-ui-theme="sap_bluecrystal"></script>
+	
+	<script>
+		//URL - http://services.odata.org/Northwind/Northwind.svc/Customers('ALFKI')/?$format=json
+		//var oModel = new sap.ui.model.odata.ODataModel("proxy/http/services.odata.org/Northwind/Northwind.svc");   
+	var oModel = new sap.ui.model.json.JSONModel();
+//	var aData=null;
+//	$.getJSON("ZSHEADER.json",function(result){aData=result;});
+//	oModel.setJSON(aData});
+	
+	oModel.loadData('ZSHEADER.json');
+	
+	//	var oModel = new sap.ui.model.json.JSONModel("http://milsapcs1.sandisk.com:8000/sap/opu/odata/sap/Z_SALES_ORDER_SRV_01/ZSHEADER('57016065')?$expand=ZSORDERDETAILSSet01&$format=json", false, "23887", "welcome");
+	//	var oModel = new sap.ui.model.odata.ODataModel("milsapcs1.sandisk.com:8000/sap/opu/odata/sap/Z_SALES_ORDER_SRV_01/ZSHEADER('57016065')/?$expand=ZSORDERDETAILSSet01&", false, "23887", "welcome");   
+		sap.ui.getCore().setModel(oModel);  
+	// create a List control
+	var list = new sap.m.List({
+	//	headerText:"Orders"
+		type: sap.m.ListType.Navigation,
+		inset: false,
+	    growing: true,              // set growing mode on
+	    growingThreshold: 5,        // 5 items at a time
+	    growingScrollToLoad: true, 
+
+	});
+	
+	
+	
+	function handleLineItemViewChange(evt) {
+		// create dialog
+		if (!this._lineItemViewDialog) {
+			var view = this.getView();
+			this._lineItemViewDialog = new sap.m.ViewSettingsDialog({
+				sortItems : [
+					new sap.m.ViewSettingsItem({
+						text : "Product",
+						key : "PurchaseOrderItemID",
+						selected: true
+					}),
+					new sap.m.ViewSettingsItem({
+						text : "Quantity",
+						key : "Quantity"
+					}),
+					new sap.m.ViewSettingsItem({
+						text : "Delivery Date",
+						key : "DeliveryDate"
+					}),
+					new sap.m.ViewSettingsItem({
+						text : "Price",
+						key : "Amount"
+					})
+				],
+				confirm : function (evt) {
+					var params = evt.getParameters();
+					var sortPath = params.sortItem.getKey();
+					var sorter = new sap.ui.model.Sorter(sortPath, params.sortDescending);
+					var binding = view.byId("lineItemList").getBinding("items");
+					binding.sort(sorter);
+				}
+			});
+//		}
+
+		// open dialog
+		var button = this.getView().byId("lineItemViewButton");
+		this._lineItemViewDialog.open();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	var oTable = new sap.m.Table("idRandomDataTable", {
+        headerToolbar : new sap.m.Toolbar({
+            content : [ new sap.m.Label({
+                text : "ZSORDERDETAILSSet01"
+            }), new sap.m.ToolbarSpacer({}), 
+            	new sap.m.Button("idPersonalizationButton", {
+                icon : "sap-icon://drop-down-list",
+                press: handleLineItemViewChange
+            	}) ]
+        }),
+        columns : [ new sap.m.Column({
+            hAlign : "Left",
+            header : new sap.m.Text({
+                text : "OrderedProd",
+            })
+        }), new sap.m.Column({
+            hAlign : "Right",
+            header : new sap.m.Text({
+                text : "OrderQty"
+            })
+        })
+        ]
+    });
+
+
+	// bind the List items to the data collection
+	list.bindItems({
+		path : "/d",
+		sorter : new sap.ui.model.Sorter("SubmittedDate"),
+		template : new sap.m.StandardListItem({
+			title: "{CustomerName}",
+			description: "{ObjectID}",
+			type: sap.m.ListType.Navigation,
+			press:function(evt){
+				var oBindingContext = evt.getSource().getBindingContext(); // evt.getSource() is the ListItem
+			//	oSplitApp.toDetail("detail2");
+			var cells = new sap.m.ColumnListItem({
+				    type : "Navigation",
+				    cells : [
+						new sap.m.Text({ text: "{OrderedProd}" }),
+						new sap.m.Text({ text: "{OrderQty}" }),
+				    ]
+				});
+			
+				cells.attachPress(function(e){
+				oDetailPage3.setBindingContext(e.getSource().getBindingContext());
+      	    	oSplitApp.to("detail3");
+				});
+			
+			
+				oTable.bindAggregation("items", {
+    			path: oBindingContext.sPath+"/ZSORDERDETAILSSet01/results",
+    			template: cells, 
+				});
+		
+//				oSplitApp.setMode(sap.m.SplitAppMode.HideMode);
+		
+				oDetailPage2.setBindingContext(oBindingContext); // make sure the detail page has the correct data context
+				oSplitApp.toDetail("detail2");
+			}
+		})
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	function onSearch(event) {
+		if(event.getParameter("refreshButtonPressed")){
+			location.reload();
+		}
+		var filters = [];
+	    var searchString = event.getParameter("query");
+	    if (searchString && searchString.length > 0) {
+	      		var filter = new sap.ui.model.Filter("CustomerName", sap.ui.model.FilterOperator.Contains, searchString);
+	      		filters.push(filter);
+	       		list.getBinding("items").filter(filters);
+	    		}
+		}
+	
+	
+	
+	
+	
+		var oMasterPage1 = new sap.m.Page("master1",{
+			   title : "Orders",content : list, mode:"SingleSelectMaster",
+			   subHeader: 
+					new sap.m.Bar({
+								contentMiddle: [
+												new sap.m.SearchField( "searchField", {
+												search: onSearch,showRefreshButton: true,
+												width: "100%",
+												tooltip: "Search for customers"})
+												]
+                                 })          
+			});
+
+
+		var oDetailPage1 = new sap.m.Page("detail1", {
+			   content : [ new sap.m.Label({})]
+			});
+
+		// create the detail page
+		var oDetailPage2 = new sap.m.Page("detail2", {
+				title: "{ObjectID}",
+				showNavButton: true,
+				navButtonPress: function(){
+					oSplitApp.backDetail();
+				},
+				
+				content : [
+					new sap.ui.layout.form.SimpleForm({ 
+						title: "{ObjectID}",
+						content: [
+							new sap.m.Label({text: "Object ID"}),
+							new sap.m.Text({text: "{ObjectID}"}),
+							new sap.m.Label({text: "Header Status"}),
+							new sap.m.Text({text: "{HeaderStatus}"}),
+							new sap.m.Label({text: "Submitted By"}),
+							new sap.m.Text({text: "{SubmittedBy}"}),
+							new sap.m.Label({text: "EmployeeRes"}),
+							new sap.m.Text({text: "{EmployeeRes}"}),
+							new sap.m.Label({text: "SubmittedDate"}),
+							new sap.m.Text({text: "{SubmittedDate}"}),
+							new sap.m.Label({text: "EndCustomer"}),
+							new sap.m.Text({text: "{EndCustomer}"}),
+							new sap.m.Label({text: "SpecialText"}),
+							new sap.m.Text({text: "{SpecialText}"}),
+							new sap.m.Label({text: "Customer"}),
+							new sap.m.Text({text: "{Customer}"}),		
+							
+						]
+					}),
+					new sap.ui.layout.form.SimpleForm({content: [oTable]})
+					
+				]
+			});
+			var oDetailPage3 = new sap.m.Page("detail3", {
+			title: "{ObjectID}",
+
+			showNavButton: true,
+			navButtonPress: function(){
+				oSplitApp.backDetail();
+			},
+			
+			content : [
+				new sap.ui.layout.form.SimpleForm({ 
+					title: "{OrderedProd}",
+					content: [
+						new sap.m.Label({text: "Object ID"}),
+						new sap.m.Text({text: "{ObjectID}"}),
+						new sap.m.Label({text: "OrderedProd"}),
+						new sap.m.Text({text: "{OrderedProd}"}),
+						new sap.m.Label({text: "DescriptionUc"}),
+						new sap.m.Text({text: "{DescriptionUc}"}),
+						new sap.m.Label({text: "OrderQty"}),
+						new sap.m.Text({text: "{OrderQty}"}),
+						new sap.m.Label({text: "SampleType"}),
+						new sap.m.Text({text: "{SampleType}"})	
+					]
+				})
+			]
+		});
+
+			//add the master pages to the splitapp control
+			var oSplitApp = new sap.m.SplitApp("mySplitApp", {
+				masterPages : [ oMasterPage1],
+			    detailPages : [ oDetailPage1, oDetailPage2, oDetailPage3],
+			    
+			    initialDetail : "detail1",initialMaster : "master1"
+			});
+			oSplitApp.placeAt("body");
+			oSplitApp.setDefaultTransitionNameDetail("fade");	
+		//	oSplitApp.setMode("PopoverMode");
+		
+	</script>
+	
+	</head>
+	<body class='sapUiBody' id='body'>
+		<div id='content'></div>
+	</body>
+</html>
