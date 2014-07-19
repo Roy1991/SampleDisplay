@@ -1,0 +1,24 @@
+<core:View
+	controllerName="sap.ui.demo.myFiori.view.LineItem"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core" >
+	<Page
+		id="page"
+		title=" {i18n>LineItemTitle}"
+		showNavButton="true"
+		navButtonPress="handleNavBack" >
+		
+		<footer><Bar/></footer>
+		
+		<content>
+<List>
+	<DisplayListItem label="ObjectID" value="{ObjectID}"/>
+	<DisplayListItem label="OrderedProd" value="{OrderedProd}"/>
+	<DisplayListItem label="DescriptionUc" value="{DescriptionUc}"/>
+	<DisplayListItem label="OrderQty" value="{OrderQty}"/>
+	<DisplayListItem label="SampleType" value="{SampleType}"/>
+</List>
+		</content>
+		
+	</Page>
+</core:View>
