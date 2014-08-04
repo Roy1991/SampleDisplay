@@ -1,0 +1,43 @@
+<!DOCTYPE html>  
+<html><head>  
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />  
+    <title>YahooNews Trial</title>  
+  
+    <script id='sap-ui-bootstrap' 
+        src='https://openui5.hana.ondemand.com/resources/sap-ui-core.js'  
+        data-sap-ui-theme='sap_bluecrystal'  
+        data-sap-ui-libs='sap.ui.commons'></script>   
+  
+<script>
+  var oModel = new sap.ui.model.json.JSONModel("http://pipes.yahoo.com/pipes/pipe.run?_id=eb8dcd1d84e4aa323378ce219683878a&_render=json&_callback=?");
+
+  var oListBox = new sap.ui.commons.ListBox({
+   items: {
+      path: "/value/items",
+      template: new sap.ui.core.ListItem({
+	 text: "{description}"
+      }
+	)
+    }
+  });
+
+  oListBox.setModel(oModel);
+  oListBox.placeAt('content');
+
+	var oMatrixLayout = new sap.ui.commons.layout.MatrixLayout();
+	oMatrixLayout.bindElement("/value");
+	oMatrixLayout.createRow(
+	new sap.ui.commons.Label({text : "Date:"}),
+	new sap.ui.commons.TextField({value : "{pubDate}"})
+	);
+  oMatrixLayout.setModel(oModel);
+  oMatrixLayout.placeAt('mycontent');
+</script>
+
+</head>
+<body class='sapUiBody'>
+    <div id='content'></div>
+    <div id='mycontent'></div>
+</body>
+</html>
+  
