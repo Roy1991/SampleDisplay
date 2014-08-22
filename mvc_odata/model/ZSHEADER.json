@@ -1,0 +1,71 @@
+{
+   "d":[
+      {
+         "ObjectID":"57016065",
+         "HeaderStatus":"Sample Released",
+         "SubmittedBy":"Gary  Wu",
+         "EmployeeRes":"Wei Min Wang",
+         "SubmittedDate":"09/05/2013",
+         "EndCustomer":"Ocean",
+         "SpecialText":"",
+         "Customer":"2002672",
+         "CustomerName":"WEIKENG INTERNATIONAL COMPANY LIMITED",
+         "ZSORDERDETAILSSet01":{
+            "results":[
+               {
+                  "__metadata":{
+                     "uri":"http://milsapcs1.sandisk.com:8000/sap/opu/odata/sap/Z_SALES_ORDER_SRV_01/ZSORDERDETAILS('57016065')",
+                     "type":"Z_SALES_ORDER_SRV_01.ZSORDERDETAILS"
+                  },
+                  "ObjectID":"57016065",
+                  "OrderedProd":"SDSDQ-4096",
+                  "DescriptionUc":"SDSDQ-4096,STANDARD BULK,OEM",
+                  "OrderQty":"5.000",
+                  "SampleType":"Customer Sample",
+                  "ZSHEADER02":{
+                     "__deferred":{
+                        "uri":"http://milsapcs1.sandisk.com:8000/sap/opu/odata/sap/Z_SALES_ORDER_SRV_01/ZSORDERDETAILS('57016065')/ZSHEADER02"
+                     }
+                  }
+               },
+               {
+                  "ObjectID":"57016065",
+                  "OrderedProd":"SDSDQAD-032G",
+                  "DescriptionUc":"SDSDQAD-032G, STANDARD BULK, UHS, CLS10,",
+                  "OrderQty":"5.000",
+                  "SampleType":"Customer Sample",
+                  "ZSHEADER02":{
+                     "__deferred":{
+                        "uri":"http://milsapcs1.sandisk.com:8000/sap/opu/odata/sap/Z_SALES_ORDER_SRV_01/ZSORDERDETAILS('57016065')/ZSHEADER02"
+                     }
+                  }
+               },
+               {
+                  "ObjectID":"57016065",
+                  "OrderedProd":"SDSDQAB-008G",
+                  "DescriptionUc":"SDSDQAB-008G,BULKTRAY,UHS,PERF,G-OEM",
+                  "OrderQty":"5.000",
+                  "SampleType":"Customer Sample",
+                  "ZSHEADER02":{
+                     "__deferred":{
+                        "uri":"http://milsapcs1.sandisk.com:8000/sap/opu/odata/sap/Z_SALES_ORDER_SRV_01/ZSORDERDETAILS('57016065')/ZSHEADER02"
+                     }
+                  }
+               },
+               {
+                  "ObjectID":"57016065",
+                  "OrderedProd":"SDSDQAB-016G",
+                  "DescriptionUc":"SDSDQAB-016G,STANDARD BULK,UHS,PERF,G-OE",
+                  "OrderQty":"5.000",
+                  "SampleType":"Customer Sample",
+                  "ZSHEADER02":{
+                     "__deferred":{
+                        "uri":"http://milsapcs1.sandisk.com:8000/sap/opu/odata/sap/Z_SALES_ORDER_SRV_01/ZSORDERDETAILS('57016065')/ZSHEADER02"
+                     }
+                  }
+               }
+            ]
+         }
+      }
+   ]
+}

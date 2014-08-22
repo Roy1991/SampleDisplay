@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html><head>
+<meta name="description" content="Basic Fiori App with Navigation and IconTabs" />
+<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+<title>test</title>
+<script src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+				id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.m"
+				data-sap-ui-theme="sap_bluecrystal">
+		</script>
+
+ 
+<script>
+var app = sap.m.App("myApp",{});
+
+ 
+ 
+//app.addPage(tilecont);
+var l1 = new sap.m.Label("l1",{text:"Username"});
+var l2 = new sap.m.Label("l2",{text:"Password"});
+
+ 
+var tv1 = new sap.m.Input("tv1",{placeholder:""});
+var tv2 = new sap.m.Input("tv2",{type:sap.m.InputType.Password, placeholder:""});
+var page1 = new sap.m.Page("page1",{
+title: "User Details",
+content: [l1,tv1,l2,tv2,
+new sap.m.Button({
+text:"submit",
+press:function(){
+
+submit1();
+
+}
+})	
+]
+});
+
+$(document).ajaxError(function(event, request, settings) {
+
+  switch (request.status) {
+
+  
+
+  case 401:
+  // alert("wrong");
+   loginFail();
+    break;
+
+  
+  default:
+    jQuery.sap.require("sap.ui.commons.MessageToast");
+    sap.m.MessageToast.show(request.status + " - " + request.statusText, {duration: 1000});
+
+  }
+});
+function make_base_auth(user, password) 
+	{
+	 var tok = user + ':' + password;
+  	 var hash = btoa(tok);
+	 return "Basic " + hash;
+	}
+function submit1()
+{
+ $.ajax(
+	{
+   	 	 type: "GET",
+   		 url: "http://localhost:8000/proxy/sap/opu/odata/sap/ZSALES_ORDER_EXPAND_SRV/ZSHEADERSET?$filter=%20CreatedBy%20eq%20'13142'%20and%20(%20PostingDate%20ge%20datetime'2014-05-12T00:00:00'%20and%20PostingDate%20le%20datetime'2014-05-13T00:00:00'%20)&$expand=ZSORDERDETAILSNEWSet&$format=json",
+    		 dataType: 'json',
+    		 async: false,
+    		 data: '{}',
+   		 beforeSend: function (xhr)
+		 { 
+		 xhr.setRequestHeader('Authorization', make_base_auth(tv1.getValue(), tv2.getValue())); 
+   		 },
+    		success: function(data){
+		submit2();
+		
+        	}
+
+    	});
+	
+
+}
+function submit2()
+{
+	localStorage.var1 = tv1.getValue();
+	localStorage.var2 = tv2.getValue();
+	location.href = "index.html";
+
+}
+function loginFail()
+{
+	$("body").prepend("Incorrect username or password");	
+	//location.href = "login_mobile.html";
+	
+	
+}
+app.addPage(page1);
+
+app.placeAt('content');
+</script>
+ 
+</head>
+<body class='sapUiBody'>
+
+<div id='content'></div>
+
+</body>
+</html>
